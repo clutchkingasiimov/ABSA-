@@ -1,9 +1,8 @@
 import string
 from typing import Text
-from unicodedata import name
 import re
-import numpy as np 
 import nltk
+import spacy 
 # nltk.download('punkt')
 # nltk.download('stopwords')
 
@@ -18,6 +17,7 @@ class TextProcessor:
         self.stopwords = stopwords.words('english')
         #Keeping the special characters, we re-format the punctuation
         self.special_chars = re.compile('[{}]'.format(re.escape(string.punctuation)))
+        self.nlp = spacy.load("en_core_web_sm")
 
     def _iterator(self):
         for text in self.text:
@@ -25,16 +25,25 @@ class TextProcessor:
 
     def Preprocess_Text(self):
         for text in self._iterator():
-            #Token creation 
-            tokens = nltk.word_tokenize(text)
+            #Token creation & Lemmatization
+            doc = self.nlp(text)
+            tokens = [token.lemma_ for token in doc]
             tokens = [token.strip().lower() for token in tokens]
 
             #Stopword & Punctuation Removal 
             cleaned_tokens = [token for token in tokens if token not in self.stopwords]
             token_filters = filter(None,[self.special_chars.sub(' ', token) for token in cleaned_tokens])
             new_text = ' '.join(token_filters)
-            return new_text
+            print(new_text)
+
+    # def Aspect_Tag(self,text):
+        # for text in self._iterator():
+
+
 
 if __name__ == '__main__':
-    tp = TextProcessor('The name of the first President is George Washington.')
+    texts = ['The name of the first President is George Washington',
+    'Russia will continue invading Ukraine for quite some time',
+    'NATO continues to sanction Russia in support of defending Ukraine']
+    tp = TextProcessor(texts)
     tp.Preprocess_Text()
