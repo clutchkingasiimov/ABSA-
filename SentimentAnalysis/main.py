@@ -1,5 +1,6 @@
 import pandas as pd 
 from text_processor import TextProcessor
+from transformers import BertTokenizer 
 
 
 data = pd.read_csv('/home/sauraj/ABSA-/exercise2/data/devdata.csv',delimiter='\t',
@@ -16,5 +17,6 @@ data = data.rename(columns={
 
 tp = TextProcessor(data['sentence']) #Sentence column 
 data['processed_sentence'] = tp.Preprocess_Text()
+
 
 # print(data.head())
