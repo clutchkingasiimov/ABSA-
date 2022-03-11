@@ -18,6 +18,7 @@ class TextProcessor:
         #Keeping the special characters, we re-format the punctuation
         self.special_chars = re.compile('[{}]'.format(re.escape(string.punctuation)))
         self.nlp = spacy.load("en_core_web_sm")
+        self.processed_text = []
 
     def _iterator(self):
         for text in self.text:
@@ -25,8 +26,11 @@ class TextProcessor:
 
     def Preprocess_Text(self):
         for text in self._iterator():
+            #Remove numbers from the string 
+            cleaned_text = re.sub(r'\d+', '', text)
+
             #Token creation & Lemmatization
-            doc = self.nlp(text)
+            doc = self.nlp(cleaned_text)
             tokens = [token.lemma_ for token in doc]
             tokens = [token.strip().lower() for token in tokens]
 
@@ -34,16 +38,21 @@ class TextProcessor:
             cleaned_tokens = [token for token in tokens if token not in self.stopwords]
             token_filters = filter(None,[self.special_chars.sub(' ', token) for token in cleaned_tokens])
             new_text = ' '.join(token_filters)
-            print(new_text)
+
+            #Whitespace removal between pre-existing punctuations & stopwords 
+            new_text = " ".join(new_text.split())
+
+            self.processed_text.append(new_text)
+
+        return self.processed_text
 
     # def Aspect_Tag(self,text):
     #     for text in self._iterator():
 
-
-
 if __name__ == '__main__':
     texts = ['The name of the first President is George Washington',
-    'Russia will continue invading Ukraine for quite some time',
-    'NATO continues to sanction Russia in support of defending Ukraine']
+    'He became the president in the year 1776',
+    'Russia will continue invading Ukraine for quite some time, supposedly 2 years more',
+    'NATO continues to sanction Russia in support of defending Ukraine, the sanctions being going on for 2 weeks now.']
     tp = TextProcessor(texts)
     tp.Preprocess_Text()
