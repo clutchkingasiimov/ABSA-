@@ -36,8 +36,8 @@ class TextProcessor:
             new_text = ' '.join(token_filters)
             print(new_text)
 
-    def Aspect_Tag(self,text):
-        for text in self._iterator():
+    # def Aspect_Tag(self,text):
+    #     for text in self._iterator():
 
 
 
