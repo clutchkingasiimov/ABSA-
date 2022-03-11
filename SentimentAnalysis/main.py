@@ -1,6 +1,5 @@
 import pandas as pd 
 from text_processor import TextProcessor
-from transformers import BertTokenizer 
 
 
 data = pd.read_csv('/home/sauraj/ABSA-/exercise2/data/devdata.csv',delimiter='\t',
