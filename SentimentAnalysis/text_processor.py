@@ -41,13 +41,9 @@ class TextProcessor:
 
             #Whitespace removal between pre-existing punctuations & stopwords 
             new_text = " ".join(new_text.split())
-
             self.processed_text.append(new_text)
-
         return self.processed_text
 
-    # def Aspect_Tag(self,text):
-    #     for text in self._iterator():
 
 if __name__ == '__main__':
     texts = ['The name of the first President is George Washington',
