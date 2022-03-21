@@ -1,6 +1,8 @@
 Group Members: Miao WANG, Yixin ZHAO, Sauraj VERMA, Jiaqian MA
 
 # Requirements
+
+## For Version1
 pip install spacy==2.3.5
 
 pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz
@@ -38,15 +40,16 @@ The general workflow is as follows:
 
 We tried to implement both classic machine learning classifiers and deep models, with different embeddings. The results are summarized in the table below. 
 
-| Pretrained Embedding | Classifier    | Train Accuracy | Dev Accuracy |
-| -------------------- | ------------- | -------------- | ------------ |
-| BERT                 | CNN           | 90.76%         | 79.21%       |
-| GloVe               | CNN           | 94.49%         | 66.84%       |
-| BERT                | SVM           | 95.54%       | 76.06%       |
-| BERT                 | Random Forest | 95.50%     | 77.13%       |
+| Pretrained Embedding | Classifier                   | Train Accuracy | Dev Accuracy |
+|----------------------|------------------------------|----------------|--------------|
+| BERT                 | CNN                          | 90.76%         | 79.21%       |
+| GloVe                | CNN                          | 94.49%         | 60.84%       |
+| BERT                 | SVM                          | 95.54%         | 76.06%       |
+| BERT                 | Random Forest                | 95.50%         | 77.13%       |
+| BERT                 | ertForSequenceClassification | 93.88%         | 85.11%       |
 
-Given the performance, we decided to go with GloVe + CNN. 
-
+We realized with the virtue of pretrained classifier, the prediction performance can be boosted significantly. 
+If we need to avoid pretrained classifier, we would go with GloVe+CNN.
 
 
 # Final Model
