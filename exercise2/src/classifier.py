@@ -40,6 +40,8 @@ global model
 class Classifier:
     """The Classifier"""
 
+    def __init__(self,model):
+        self.model = model #Put your model here 
 
     #############################################
     def train(self, trainfile, devfile=None):
