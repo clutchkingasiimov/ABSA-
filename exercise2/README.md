@@ -21,7 +21,7 @@ The general workflow is as follows:
 
 3. Pass the vectors to the classifier to generate predicted polarity labels. 
 
-   <img src="C:\Users\Yixin\Documents\GitHub\ABSA-\exercise2\workflow.png" style="zoom: 67%;" />
+   <img src="\workflow.png" style="zoom: 67%;" />
 
 # Experiments 
 
@@ -56,4 +56,4 @@ The best combination we found with grid search is:
 
 The final model structure is as follows
 
-![](C:\Users\Yixin\Documents\GitHub\ABSA-\exercise2\model_architecture.png)
+![](\model_architecture.png)
