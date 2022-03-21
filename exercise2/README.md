@@ -1,3 +1,5 @@
+Group Members: Miao WANG, Yixin ZHAO, Sauraj VERMA, Jiaqian MA
+
 # Context
 
 In this assignment we are expected to build a classifier to predict aspect-based polarities (positive, negative and neutral) of opinions in sentences, using the <aspect_category, aspect_term, sentence> triple. 
