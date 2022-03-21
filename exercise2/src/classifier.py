@@ -1,3 +1,4 @@
+
 import pandas as pd
 import numpy as np
 import random
@@ -8,10 +9,10 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torchtext import data, datasets
 from sklearn.model_selection import train_test_split
-from collections import Counter
+
+
 
 from Utils import *
-
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # set random seed
 SEED = 42
@@ -21,30 +22,24 @@ np.random.seed(SEED)
 torch.manual_seed(SEED)
 torch.backends.cudnn.deterministic = True
 
-TEXT = data.Field(tokenize='spacy',
-                  tokenizer_language='en_core_web_sm',
-                  batch_first=True)
-LABEL = data.LabelField(dtype=torch.float)
+TEXT = data.Field(tokenize = 'spacy',
+                  tokenizer_language = 'en_core_web_sm',
+                  batch_first = True)
+LABEL = data.LabelField(dtype = torch.float)
 MAX_VOCAB_SIZE = 25000
-criterion = nn.CrossEntropyLoss()
-criterion = criterion.to(device)
+
+
+
 BATCH_SIZE = 5
+
+
 N_EPOCHS = 10
+global model
 
 
 class Classifier:
     """The Classifier"""
 
-    def __init__(self, EMBEDDING_DIM=100, N_FILTERS=200, OUTPUT_DIM=3, DROPOUT=0.15):
-        self.INPUT_DIM = None
-        self.EMBEDDING_DIM = EMBEDDING_DIM
-        self.N_FILTERS = N_FILTERS
-
-        self.OUTPUT_DIM = OUTPUT_DIM  # 3 labels
-        self.DROPOUT = DROPOUT
-        self.PAD_IDX = None
-
-        self.model = None
 
     #############################################
     def train(self, trainfile, devfile=None):
@@ -54,6 +49,7 @@ class Classifier:
          OF MODEL HYPERPARAMETERS
         """
         train_set = load_data(trainfile)
+
 
         train, val = train_test_split(train_set, test_size=0.1)
         train_cleaned = preprocess(train)
@@ -67,6 +63,9 @@ class Classifier:
             text_field=TEXT, label_field=LABEL,
             df=val_cleaned)
         val_ds = val_ds[0]
+
+
+
 
         TEXT.build_vocab(train_ds,
                          max_size=MAX_VOCAB_SIZE,
@@ -88,28 +87,34 @@ class Classifier:
             sort_key=val_ds.sort_key,
             device=device)
 
-        self.INPUT_DIM = len(TEXT.vocab)
+        INPUT_DIM = len(TEXT.vocab)
+        EMBEDDING_DIM = 100
+        N_FILTERS = 200
 
-        self.PAD_IDX = TEXT.vocab.stoi[TEXT.pad_token]
+        OUTPUT_DIM = 3  # 3 labels
+        DROPOUT = 0.15
+        PAD_IDX = TEXT.vocab.stoi[TEXT.pad_token]
 
-        self.model = CNN(self.INPUT_DIM, self.EMBEDDING_DIM, self.OUTPUT_DIM, self.N_FILTERS, self.DROPOUT,
-                         self.PAD_IDX)
+        model = CNN(INPUT_DIM, EMBEDDING_DIM, OUTPUT_DIM, N_FILTERS, DROPOUT, PAD_IDX)
         # load pre-trained embeddings
 
         pretrained_embeddings = TEXT.vocab.vectors
-        self.model.embedding.weight.data.copy_(pretrained_embeddings)
+        model.embedding.weight.data.copy_(pretrained_embeddings)
 
         # zero the initial weights of the unknown and padding tokens
 
         UNK_IDX = TEXT.vocab.stoi[TEXT.unk_token]
 
-        self.model.embedding.weight.data[UNK_IDX] = torch.zeros(self.EMBEDDING_DIM)
-        self.model.embedding.weight.data[self.PAD_IDX] = torch.zeros(self.EMBEDDING_DIM)
+        model.embedding.weight.data[UNK_IDX] = torch.zeros(EMBEDDING_DIM)
+        model.embedding.weight.data[PAD_IDX] = torch.zeros(EMBEDDING_DIM)
         # Parameters for model training
         LR = 1e-4
-        optimizer = optim.Adam(self.model.parameters(), lr=LR)
+        optimizer = optim.Adam(model.parameters(), lr=LR)
 
-        self.model = self.model.to(device)
+        criterion = nn.CrossEntropyLoss()
+
+        model = model.to(device)
+        criterion = criterion.to(device)
 
         best_valid_loss = float('inf')
         total_train_acc = []
@@ -119,8 +124,8 @@ class Classifier:
 
             start_time = time.time()
 
-            train_loss, train_acc = train_model(self.model, train_iterator, optimizer, criterion)
-            valid_loss, valid_acc = evaluate_model(self.model, val_iterator, criterion)
+            train_loss, train_acc = train_model(model, train_iterator, optimizer, criterion)
+            valid_loss, valid_acc = evaluate_model(model, val_iterator, criterion)
 
             end_time = time.time()
             epoch_mins, epoch_secs = epoch_time(start_time, end_time)
@@ -130,13 +135,14 @@ class Classifier:
 
             if valid_loss < best_valid_loss:
                 best_valid_loss = valid_loss
-                torch.save(self.model.state_dict(), 'model.pt')
+                torch.save(model.state_dict(), 'model.pt')
 
             print(f'Epoch: {epoch + 1:02} | Epoch Time: {epoch_mins}m {epoch_secs}s')
             print(f'\tTrain Loss: {train_loss:.3f} | Train Acc: {train_acc * 100:.2f}%')
             print(f'\t Val. Loss: {valid_loss:.3f} |  Val. Acc: {valid_acc * 100:.2f}%')
 
         # plot_acc(total_train_acc, total_val_acc, N_EPOCHS)
+
 
     def predict(self, datafile):
         """Predicts class labels for the input instances in file 'datafile'
@@ -155,18 +161,14 @@ class Classifier:
             sort_key=test_ds.sort_key,
             device=device)
 
-        self.model.load_state_dict(torch.load('model.pt'))
+        # model = CNN(INPUT_DIM, EMBEDDING_DIM, OUTPUT_DIM, N_FILTERS, DROPOUT, PAD_IDX)
+        model.load_state_dict(torch.load('model.pt'))
 
-        test_loss, test_acc = evaluate_model(self.model, test_iterator, criterion)
+        test_loss, test_acc = evaluate_model(model, test_iterator, criterion)
 
-        print(f'Test Loss: {test_loss:.3f} | Test Acc: {test_acc * 100:.2f}%')
+        print(f'Test Loss: {test_loss:.3f} | Test Acc: {test_acc*100:.2f}%')
 
-        slabel_ids = get_predsevaluate(self.model, test_iterator)
-
-        label_dict = {0: 'positive', 1: 'negative', 2: 'neutral'}
-        slabels = [label_dict[i] for i in slabel_ids]
-
-        return slabels
+        return get_predsevaluate(model, test_iterator)
 
 
 
