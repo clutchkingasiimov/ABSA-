@@ -85,7 +85,7 @@ def preprocess(df):
 
 
 
-class DataFrameDataset(torch.legacy.data.Dataset):
+class DataFrameDataset(data.Dataset):
   '''
   credit: https://gist.github.com/lextoumbourou/8f90313cbc3598ffbabeeaa1741a11c8
   To create a dataloader suitable for pytorch, we need to transform a dataframe into an iterator

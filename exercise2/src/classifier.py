@@ -50,7 +50,7 @@ class Classifier:
         """
         train_set = load_data(trainfile)
 
-
+        # train, validation test split
         train, val = train_test_split(train_set, test_size=0.1)
         train_cleaned = preprocess(train)
         val_cleaned = preprocess(val)
