@@ -32,9 +32,9 @@ We tried to implement both classic machine learning classifiers and deep models,
 | Pretrained Embedding | Classifier    | Train Accuracy | Dev Accuracy |
 | -------------------- | ------------- | -------------- | ------------ |
 | BERT                 | CNN           | 90.76%         | 79.21%       |
-| GloVe                | CNN           | 94.49%         | 66.84%       |
-| BERT                 | SVM           |                | 74.47%       |
-| BERT                 | Random Forest |                | 75.80%       |
+| GloVe               | CNN           | 94.49%         | 66.84%       |
+| BERT                | SVM           | 95.54%       | 76.06%       |
+| BERT                 | Random Forest | 95.50%     | 77.13%       |
 
 Given the performance, we decided to go with GloVe + CNN. 
 
