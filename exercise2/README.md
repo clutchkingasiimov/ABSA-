@@ -1,5 +1,12 @@
 Group Members: Miao WANG, Yixin ZHAO, Sauraj VERMA, Jiaqian MA
 
+# Requirements
+pip install spacy==2.3.5
+
+pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz
+
+pip install torchtext==0.4.0
+
 # Context
 
 In this assignment we are expected to build a classifier to predict aspect-based polarities (positive, negative and neutral) of opinions in sentences, using the <aspect_category, aspect_term, sentence> triple. 
