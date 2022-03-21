@@ -21,7 +21,7 @@ The general workflow is as follows:
 
 3. Pass the vectors to the classifier to generate predicted polarity labels. 
 
-   <img src="\workflow.png" style="zoom: 67%;" />
+   <img src="https://github.com/clutchkingasiimov/ABSA-/tree/main/exercise2/workflow.png?raw=true" style="zoom: 67%;" />
 
 # Experiments 
 
@@ -31,8 +31,8 @@ We tried to implement both classic machine learning classifiers and deep models,
 | -------------------- | ------------- | -------------- | ------------ |
 | BERT                 | CNN           | 90.76%         | 79.21%       |
 | GloVe                | CNN           | 94.49%         | 66.84%       |
-| BERT                 | SVM           |                |              |
-| BERT                 | Random Forest |                |              |
+| BERT                 | SVM           |                | 74.47%       |
+| BERT                 | Random Forest |                | 75.80%       |
 
 Given the performance, we decided to go with GloVe + CNN. 
 
@@ -56,4 +56,4 @@ The best combination we found with grid search is:
 
 The final model structure is as follows
 
-![](\model_architecture.png)
+![](https://github.com/clutchkingasiimov/ABSA-/tree/main/exercise2/model_architecture.png?raw=true)
